@@ -21,10 +21,6 @@ const esp_riscv = .{
     },
 };
 
-const hal = .{
-    .source_file = path("/src/hals/ESP32_C3.zig"),
-};
-
 pub const chips = struct {
     pub const esp32_c3 = .{
         .preferred_format = .bin, // TODO: Exchange FLAT format with .esp format
@@ -43,7 +39,30 @@ pub const chips = struct {
                 .{ .kind = .ram, .offset = 0x3FC8_0000, .length = 0x0006_0000 }, // sram 1, data bus
             },
         },
-        .hal = hal,
+        .hal = .{
+            .source_file = path("/src/hals/ESP32_C3.zig"),
+        },
+    };
+    pub const esp32_c6 = .{
+        .preferred_format = .bin, // TODO: Exchange FLAT format with .esp format
+        .chip = .{
+            .name = "ESP32-C6",
+            .url = "https://www.espressif.com/en/products/socs/esp32-c6",
+
+            .cpu = .{ .custom = &esp_riscv },
+
+            .register_definition = .{
+                .svd = path("/src/chips/ESP32-C6.svd"),
+            },
+
+            .memory_regions = &.{
+                .{ .kind = .flash, .offset = 0x4200_0000, .length = 0x0080_0000 }, // external memory, ibus
+                .{ .kind = .ram, .offset = 0x4000_0000, .length = 0x0004_FFFF }, // sram 1, data bus
+            },
+        },
+        .hal = .{
+            .source_file = path("/src/hals/ESP32_C6.zig"),
+        },
     };
 };
 
